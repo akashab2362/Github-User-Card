@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Github Card</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        background-color: rgb(252, 221, 221);
+        width: 50%;
+        /* height: 100vh; */
+        border-radius: 100px;
+        border: 1px solid black;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        padding-bottom: 70px;
+      }
+      form {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+      }
+      #username {
+        width: 75%;
+        padding: 10px 20px;
+        border-radius: 20px 0px 0px 20px;
+        border: none;
+      }
+      #submitdetails {
+        /* border: 1px solid black; */
+        padding: 10px 10px;
+        border-radius: 0px 20px 20px 0px;
+        background-color: rgb(255, 102, 47);
+        border: none;
+        color: white;
+      }
+      #submitdetails:focus {
+        background-color: rgb(124, 33, 0);
+      }
+      #details {
+        border: 1px solid black;
+        margin: 0px auto;
+        width: 80%;
+        border-radius: 50px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      #profileImage {
+        border: 1px solid black;
+        width: 250px;
+        height: 250px;
+      }
+      #name {
+        font-size: x-large;
+        font-weight: bolder;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form id="form">
+        <input
+          type="text"
+          id="username"
+          placeholder="Enter User Name"
+          required
+        />
+        <input type="submit" id="submitdetails" value="Fetch Details" />
+      </form>
+      <div id="details"></div>
+    </div>
+  </body>
+  <script>
+    let form = document.getElementById("form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const requestUrl = `http://api.github.com/users/${username}`;
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", requestUrl);
+      xhr.onload = () => {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) {
+          document.getElementById(
+            "details"
+          ).innerHTML = `<img src='${data.avatar_url}' alt="profile" id="profileImage"/><p id="name">${data.name}</p><p><strong>Bio:</strong> ${data.bio}</p><p>${data.followers} Followers</p><p>${data.location}</p>`;
+        } else {
+          document.getElementById(
+            "details"
+          ).innerHTML = `<img src='${data.avatar_url}' alt="profile not available" id="profileImage"/><p id="name">Invalid Username</p><p><strong>Bio:</strong> Invalid Username</p><p>Invalid Username Followers</p><p>Invalid Username</p>`;
+        }
+      };
+      xhr.send();
+    });
+  </script>
+</html>
